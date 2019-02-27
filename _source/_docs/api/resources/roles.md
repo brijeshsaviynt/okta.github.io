@@ -14,26 +14,28 @@ Explore the Administrator Roles API:  [![Run in Postman](https://run.pstmn.io/bu
 
 ## Role Assignment Operations
 
-### List Roles Assigned to User
+### List Roles
+
+#### List Roles Assigned to User
 {:.api .api-operation}
 
 {% api_operation get /api/v1/users/${userId}/roles %}
 
 Lists all roles assigned to a user.
 
-#### Request Parameters
+##### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter    | Description                                         | Param Type | DataType | Required |
 |:------------ |:--------------------------------------------------- |:---------- |:-------- |:-------- |
 | userId          | `id` of a user                                        | URL        | String   | TRUE     |
 
-#### Response Parameters
+##### Response Parameters
 {:.api .api-response .api-response-params}
 
 Array of [Role](#role-model)
 
-#### Request Example
+##### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -108,14 +110,68 @@ curl -v -X GET \
 ]
 ~~~
 
-### Assign Role to User
+#### List Roles Assigned to Group
+{:.api .api-operation}
+
+{% api_operation get /api/v1/groups/${groupId}/roles %}
+
+Lists all roles assigned to a group.
+
+##### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter        | Description                                            | Param Type | DataType | Required |
+|:---------------- |:------------------------------------------------------ |:---------- |:-------- |:-------- |
+| groupId          | `id` of a group                                        | URL        | String   | TRUE     |
+
+##### Response Parameters
+{:.api .api-response .api-response-params}
+
+Array of [Role](#role-model)
+
+##### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X GET \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles"
+~~~
+
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~json
+[
+    {
+        "id": "IFIFAX2BIRGUSTQ",
+        "label": "Application Administrator",
+        "type": "APP_ADMIN",
+        "status": "ACTIVE",
+        "created": "2019-02-27T14:48:59.000Z",
+        "lastUpdated": "2019-02-27T14:48:59.000Z",
+        "assignmentType": "GROUP",
+        "_links": {
+            "assignee": {
+                "href": "http://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3"
+            }
+        }
+    }
+]
+~~~
+
+### Assign Role
+
+#### Assign Role to User
 {:.api .api-operation}
 
 {% api_operation post /api/v1/users/${userId}/roles %}
 
 Assigns a role to a user.
 
-#### Request Parameters
+##### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description            | Param Type | DataType                  | Required |
@@ -123,12 +179,12 @@ Assigns a role to a user.
 | userId       | `id` of a user           | URL        | String                    | TRUE     |
 | type      | type of role to assign | Body       | [Role Type](#role-types)  | TRUE     |
 
-#### Response Parameters
+##### Response Parameters
 {:.api .api-response .api-response-params}
 
 Assigned [Role](#role-model)
 
-#### Request Example
+##### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -141,7 +197,7 @@ curl -v -X POST \
 }' "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles"
 ~~~
 
-##### Response Example
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~json
@@ -155,14 +211,69 @@ curl -v -X POST \
 }
 ~~~
 
-### Unassign Role from User
+#### Assign Role to Group
+{:.api .api-operation}
+
+{% api_operation post /api/v1/groups/${groupId}/roles %}
+
+Assigns a role to a group.
+
+##### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter     | Description               | Param Type | DataType                  | Required |
+|:--------------|:--------------------------|:-----------|:--------------------------|:---------|
+| groupId       | `id` of a group           | URL        | String                    | TRUE     |
+| type          | type of role to assign    | Body       | [Role Type](#role-types)  | TRUE     |
+
+##### Response Parameters
+{:.api .api-response .api-response-params}
+
+Assigned [Role](#role-model)
+
+##### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X POST \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+-d '{
+      "type": "ORG_ADMIN"
+}' "https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles"
+~~~
+
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~json
+{
+    "id": "grasraHPx7i79ajaJ0g3",
+    "label": "Organization Administrator",
+    "type": "ORG_ADMIN",
+    "status": "ACTIVE",
+    "created": "2019-02-27T14:56:55.000Z",
+    "lastUpdated": "2019-02-27T14:56:55.000Z",
+    "assignmentType": "GROUP",
+    "_links": {
+        "assignee": {
+            "href": "http://rain.okta1.com:1802/api/v1/groups/00gsr2IepS8YhHRFf0g3"
+        }
+    }
+}
+~~~
+
+### Unassign Role
+
+#### Unassign Role from User
 {:.api .api-operation}
 
 {% api_operation delete /api/v1/users/${userId}/roles/${roleId} %}
 
 Unassigns a role from a user.
 
-#### Request Parameters
+##### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description  | Param Type | DataType | Required |
@@ -170,14 +281,14 @@ Unassigns a role from a user.
 | userId       | `id` of a user | URL        | String   | TRUE     |
 | roleId       | `id` of a role | URL        | String   | TRUE     |
 
-#### Response Parameters
+##### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-#### Request Example
+##### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -188,7 +299,47 @@ curl -v -X DELETE \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/ra1b8anIk7rx7em7L0g4"
 ~~~
 
-##### Response Example
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+#### Unassign Role from Group
+{:.api .api-operation}
+
+{% api_operation delete /api/v1/groups/${groupId}/roles/${roleId} %}
+
+Unassigns a role from a group.
+
+##### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter     | Description     | Param Type | DataType | Required |
+|:--------------|:----------------|:-----------|:---------|:---------|
+| groupId       | `id` of a group | URL        | String   | TRUE     |
+| roleId        | `id` of a role  | URL        | String   | TRUE     |
+
+##### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+##### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X DELETE \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/grasraHPx7i79ajaJ0g3"
+~~~
+
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
@@ -200,13 +351,15 @@ HTTP/1.1 204 No Content
 ### Group Administrator Role Group Targets
 
 #### List Group Targets for Group Administrator Role
+
+##### List Group Targets for Group Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation get /api/v1/users/${userId}/roles/${roleId}/targets/groups %}
 
-Lists all group targets for a `USER_ADMIN` role assignment.
+Lists all group targets for a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a user.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                                                  | Param Type | DataType | Required |
@@ -218,14 +371,14 @@ Lists all group targets for a `USER_ADMIN` role assignment.
 
 Treat the page cursor as an opaque value: obtain it through the next link relation. See [Pagination](/docs/api/getting_started/design_principles#pagination).
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 Array of [Groups](groups)
 
 If the role isn't scoped to specific group targets, an empty array `[]` is returned.
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -236,7 +389,7 @@ curl -v -X GET \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/groups"
 ~~~
 
-##### Response Example
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~json
@@ -274,16 +427,97 @@ curl -v -X GET \
 ]
 ~~~
 
+##### List Group Targets for Group Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation get /api/v1/groups/${groupId}/roles/${roleId}/targets/groups %}
+
+Lists all group targets for a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a group.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter     | Description                                                  | Param Type | DataType | Required |
+|:--------------|:-------------------------------------------------------------|:-----------|:---------|:---------|
+| groupId       | `id` of a group                                              | URL        | String   | TRUE     |
+| roleId        | `id` of a role                                               | URL        | String   | TRUE     |
+| limit         | Specifies the number of results for a page (default is 20)   | Query      | Number   | FALSE    |
+| after         | Specifies the pagination cursor for the next page of targets | Query      | String   | FALSE    |
+
+Treat the page cursor as an opaque value: obtain it through the next link relation. See [Pagination](/docs/api/getting_started/design_principles#pagination).
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+Array of [Groups](groups)
+
+If the role isn't scoped to specific group targets, an empty array `[]` is returned.
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X GET \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/JBCUYUC7IRCVGS27IFCE2SKO/targets/groups"
+~~~
+
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~json
+[
+    {
+        "id": "00gsrc96agspOaiP40g3",
+        "created": "2019-02-27T15:19:11.000Z",
+        "lastUpdated": "2019-02-27T15:19:11.000Z",
+        "lastMembershipUpdated": "2019-02-27T15:19:11.000Z",
+        "objectClass": [
+            "okta:user_group"
+        ],
+        "type": "OKTA_GROUP",
+        "profile": {
+            "name": "userGroup0",
+            "description": null
+        },
+        "_links": {
+            "logo": [
+                {
+                    "name": "medium",
+                    "href": "http://{yourOktaDomain}/assets/img/logos/groups/okta-medium.d7fb831bc4e7e1a5d8bd35dfaf405d9e.png",
+                    "type": "image/png"
+                },
+                {
+                    "name": "large",
+                    "href": "http://{yourOktaDomain}/assets/img/logos/groups/okta-large.511fcb0de9da185b52589cb14d581c2c.png",
+                    "type": "image/png"
+                }
+            ],
+            "users": {
+                "href": "http://{yourOktaDomain}/api/v1/groups/00gsrc96agspOaiP40g3/users"
+            },
+            "apps": {
+                "href": "http://{yourOktaDomain}/api/v1/groups/00gsrc96agspOaiP40g3/apps"
+            }
+        }
+    }
+]
+~~~
+
 #### Add Group Target to Group Administrator Role
+
+##### Add Group Target to Group Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation put /api/v1/users/${userId}/roles/${roleId}/targets/groups/${groupId} %}
 
-Adds a group target for a `USER_ADMIN` role assignment.
+Adds a group target for a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a user.
 
 Adding the first group target changes the scope of the role assignment from applying to all targets to only applying to the specified target.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                                   | Param Type | DataType | Required |
@@ -292,14 +526,14 @@ Adding the first group target changes the scope of the role assignment from appl
 | roleId       | `id` of a role                                  | URL        | String   | TRUE     |
 | groupId      | `id` of group target to scope role assignment | URL        | String   | TRUE     |
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -310,7 +544,50 @@ curl -v -X PUT \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/groups/00garkxjAHDYPFcsP0g4"
 ~~~
 
-##### Response Example
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+##### Add Group Target to Group Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation put /api/v1/users/${groupId}/roles/${roleId}/targets/groups/${targetGroupId} %}
+
+Adds a group target for a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a group.
+
+Adding the first group target changes the scope of the role assignment from applying to all targets to only applying to the specified target.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter          | Description                                   | Param Type | DataType | Required |
+|:-------------------|:----------------------------------------------|:-----------|:---------|:---------|
+| groupId            | `id` of an admin group                        | URL        | String   | TRUE     |
+| roleId             | `id` of a role                                | URL        | String   | TRUE     |
+| targetGroupId      | `id` of group target to scope role assignment | URL        | String   | TRUE     |
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X PUT \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/JBCUYUC7IRCVGS27IFCE2SKO/targets/groups/00gsrhsUaRoUib0XQ0g3"
+~~~
+
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
@@ -318,15 +595,17 @@ HTTP/1.1 204 No Content
 ~~~
 
 #### Remove Group Target from Group Administrator Role
+
+##### Remove Group Target from Group Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation delete /api/v1/users/${userId}/roles/${roleId}/targets/groups/${groupId} %}
 
-Removes a group target from a `USER_ADMIN` role assignment.
+Removes a group target from a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a user.
 
 Don't remove the last group target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all groups, the API consumer should delete the `USER_ADMIN` role assignment and recreate it.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                              | Param Type | DataType | Required |
@@ -335,14 +614,14 @@ Don't remove the last group target from a role assignment, as this causes an exc
 | roleId       | `id` of a role                             | URL        | String   | TRUE     |
 | groupId      | `id` of group target for role assignment | URL        | String   | TRUE     |
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -353,7 +632,50 @@ curl -v -X DELETE \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/groups/00garkxjAHDYPFcsP0g4"
 ~~~
 
-##### Response Example
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+##### Remove Group Target from Group Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation delete /api/v1/groups/${groupId}/roles/${roleId}/targets/groups/${targetGroupId} %}
+
+Removes a group target from a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a group.
+
+Don't remove the last group target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all groups, the API consumer should delete the `USER_ADMIN` role assignment and recreate it.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter     | Description                              | Param Type | DataType | Required |
+|:--------------|:-----------------------------------------|:-----------|:---------|:---------|
+| groupId       | `id` of an admin group                   | URL        | String   | TRUE     |
+| roleId        | `id` of a role                           | URL        | String   | TRUE     |
+| targetGroupId | `id` of group target for role assignment | URL        | String   | TRUE     |
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X DELETE \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/JBCUYUC7IRCVGS27IFCE2SKO/targets/groups/00gsrhsUaRoUib0XQ0g3"
+~~~
+
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
@@ -363,13 +685,15 @@ HTTP/1.1 204 No Content
 ### App Administrator Role App Targets
 
 #### List App Targets for App Administrator Role
+
+##### List App Targets for App Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation get /api/v1/users/${userId}/roles/${roleId}/targets/catalog/apps %}
 
-Lists all app targets for an `APP_ADMIN` role assignment.
+Lists all app targets for an `APP_ADMIN` role assigned to a user.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                                                  | Param Type | DataType | Required |
@@ -381,14 +705,14 @@ Lists all app targets for an `APP_ADMIN` role assignment.
 
 Treat the page cursor as an opaque value: obtain it through the next link relation. See [Pagination](/docs/api/getting_started/design_principles#pagination)
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 Array of Catalog Apps
 
 If the role is not scoped to specific apps in the catalog, an empty array `[]` is returned.
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -399,7 +723,7 @@ curl -v -X GET \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/catalog/apps"
 ~~~
 
-##### Response Example
+###### Response Example
 {:.api .api-response .api-response-example}
 
 The example shows two applications and two instances. Note the response for instances has an `id` field.
@@ -500,18 +824,102 @@ The example shows two applications and two instances. Note the response for inst
 
 ~~~
 
+##### List App Targets for App Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation get /api/v1/groups/${groupId}/roles/${roleId}/targets/catalog/apps %}
+
+Lists all app targets for an `APP_ADMIN` role assigned to a group.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter | Description                                                  | Param Type | DataType | Required |
+|:----------|:-------------------------------------------------------------|:-----------|:---------|:---------|
+| groupId   | `id` of a group                                              | URL        | String   | TRUE     |
+| roleId    | `id` of a role                                               | URL        | String   | TRUE     |
+| limit     | Specifies the number of results for a page (default is 20)   | Query      | Number   | FALSE    |
+| after     | Specifies the pagination cursor for the next page of targets | Query      | String   | FALSE    |
+
+Treat the page cursor as an opaque value: obtain it through the next link relation. See [Pagination](/docs/api/getting_started/design_principles#pagination)
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+Array of Catalog Apps
+
+If the role is not scoped to specific apps in the catalog, an empty array `[]` is returned.
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X GET \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/IFIFAX2BIRGUSTQ/targets/catalog/apps"
+~~~
+
+###### Response Example
+{:.api .api-response .api-response-example}
+
+The example shows one application and one instance. Note the response for instances has an `id` field.
+
+~~~json
+[
+    {
+        "name": "facebook",
+        "displayName": "Facebook",
+        "description": "Giving people the power to share and make the world more open and connected.",
+        "status": "ACTIVE",
+        "lastUpdated": "2017-07-19T23:37:37.000Z",
+        "category": "SOCIAL",
+        "verificationStatus": "OKTA_VERIFIED",
+        "website": "http://www.facebook.com/",
+        "signOnModes": [
+            "BROWSER_PLUGIN"
+        ],
+        "_links": {
+            "logo": [
+                {
+                    "name": "medium",
+                    "href": "http://{yourOktaDomain}/assets/img/logos/facebook.e8215796628b5eaf687ba414ae245659.png",
+                    "type": "image/png"
+                }
+            ],
+            "self": {
+                "href": "http://{yourOktaDomain}/api/v1/catalog/apps/facebook"
+            }
+        }
+    },
+    {
+        "name": "24 Seven Office 0",
+        "status": "ACTIVE",
+        "id": "0oasrudLtMlzAsTxk0g3",
+        "_links": {
+            "self": {
+                "href": "http://{yourOktaDomain}/api/v1/apps/0oasrudLtMlzAsTxk0g3"
+            }
+        }
+    }
+]
+~~~
+
 #### Add App Target to App Administrator Role
+
+##### Add App Target to App Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation put /api/v1/users/${userId}/roles/${roleId}/targets/catalog/apps/${appName} %}
 
-Adds an app target for an `APP_ADMIN` role assignment.
+Adds an app target for an `APP_ADMIN` role assigned to a user.
 
 Adding the first app target changes the scope of the role assignment from applying to all app targets to applying to the specified target.
 
 Adding an app target will override any existing instance targets of the app. For example, if someone was assigned to administer a specific Facebook instance, calling this endpoint with `facebook` for `appName`, would make them administrator for all Facebook instances.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                                                | Param Type | DataType | Required |
@@ -520,14 +928,14 @@ Adding an app target will override any existing instance targets of the app. For
 | roleId       | `id` of a role                                               | URL        | String   | TRUE     |
 | appName   | `name` of app target from catalog to scope role assignment | URL        | String   | TRUE     |
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -538,26 +946,72 @@ curl -v -X PUT \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/catalog/apps/amazon_aws"
 ~~~
 
-##### Response Example
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
+##### Add App Target to App Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation put /api/v1/groups/${groupId}/roles/${roleId}/targets/catalog/apps/${appName} %}
+
+Adds an app target for an `APP_ADMIN` role assigned to a group.
+
+Adding the first app target changes the scope of the role assignment from applying to all app targets to applying to the specified target.
+
+Adding an app target will override any existing instance targets of the app. For example, if someone was assigned to administer a specific Facebook instance, calling this endpoint with `facebook` for `appName`, would make them administrator for all Facebook instances.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter | Description                                                | Param Type | DataType | Required |
+|:----------|:-----------------------------------------------------------|:-----------|:---------|:---------|
+| groupId   | `id` of a group                                            | URL        | String   | TRUE     |
+| roleId    | `id` of a role                                             | URL        | String   | TRUE     |
+| appName   | `name` of app target from catalog to scope role assignment | URL        | String   | TRUE     |
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X PUT \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/IFIFAX2BIRGUSTQ/targets/catalog/apps/amazon_aws"
+~~~
+
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
 
 #### Add App Instance Target to App Administrator Role
+
+##### Add App Instance Target to App Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation put /api/v1/users/${userId}/roles/${roleId}/targets/catalog/apps/${appName}/${appInstanceId} %}
 
-Adds an app instance target for an `APP_ADMIN` role assignment
+Adds an app instance target for an `APP_ADMIN` role assigned to a user
 
 Adding the first app or (app instance) target changes the scope of the role assignment from applying to all app targets to applying to the specified target.
 
 App Targets and App Instance Targets cannot be mixed for the same app name. For example, you cannot specify that an administrator has access to mange Salesforce (the entire app type) and specific instances of the Salesforce app; it must be one or the other.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                                                | Param Type | DataType | Required |
@@ -567,14 +1021,14 @@ App Targets and App Instance Targets cannot be mixed for the same app name. For 
 | appName   | `name` of app target from catalog to scope role assignment | URL        | String   | TRUE     |
 | appInstanceId   | `id` of the app instance target to scope role assignment | URL        | String   | TRUE     |
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -582,10 +1036,56 @@ curl -v -X PUT \
 -H "Accept: application/json" \
 -H "Content-Type: application/json" \
 -H "Authorization: SSWS ${api_token}" \
-"https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/catalog/apps/amazon_aws"
+"https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/catalog/apps/amazon_aws/0oasrudLtMlzAsTxk0g3"
 ~~~
 
-##### Response Example
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+##### Add App Instance Target to App Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation put /api/v1/groups/${groupId}/roles/${roleId}/targets/catalog/apps/${appName}/${appInstanceId} %}
+
+Adds an app instance target for an `APP_ADMIN` role assigned to a group
+
+Adding the first app or (app instance) target changes the scope of the role assignment from applying to all app targets to applying to the specified target.
+
+App Targets and App Instance Targets cannot be mixed for the same app name. For example, you cannot specify that an administrator has access to mange Salesforce (the entire app type) and specific instances of the Salesforce app; it must be one or the other.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter       | Description                                                | Param Type | DataType | Required |
+|:----------------|:-----------------------------------------------------------|:-----------|:---------|:---------|
+| groupId         | `id` of a group                                            | URL        | String   | TRUE     |
+| roleId          | `id` of a role                                             | URL        | String   | TRUE     |
+| appName         | `name` of app target from catalog to scope role assignment | URL        | String   | TRUE     |
+| appInstanceId   | `id` of the app instance target to scope role assignment   | URL        | String   | TRUE     |
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X PUT \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/IFIFAX2BIRGUSTQ/targets/catalog/apps/facebook/0oassqD8YkfwsJeV60g3"
+~~~
+
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
@@ -593,15 +1093,17 @@ HTTP/1.1 204 No Content
 ~~~
 
 #### Remove App Target from App Administrator Role
+
+##### Remove App Target from App Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation delete /api/v1/users/${userId}/roles/${roleId}/targets/catalog/apps/${appName} %}
 
-Removes an app target from an `APP_ADMIN` role assignment
+Removes an app target from an `APP_ADMIN` role assigned to a user
 
 > Note: Don't remove the last app target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all apps, the API consumer should delete the `APP_ADMIN` role assignment and recreate it.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                              | Param Type | DataType | Required |
@@ -610,14 +1112,14 @@ Removes an app target from an `APP_ADMIN` role assignment
 | roleId       | `id` of a role                             | URL        | String   | TRUE     |
 | appName   | `name` of app target for role assignment | URL        | String   | TRUE     |
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -628,7 +1130,50 @@ curl -v -X DELETE \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/catalog/apps/amazon_aws"
 ~~~
 
-##### Response Example
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+##### Remove App Target from App Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation delete /api/v1/groups/${groupId}/roles/${roleId}/targets/catalog/apps/${appName} %}
+
+Removes an app target from an `APP_ADMIN` role assigned to a group
+
+> Note: Don't remove the last app target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all apps, the API consumer should delete the `APP_ADMIN` role assignment and recreate it.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter | Description                              | Param Type | DataType | Required |
+|:----------|:-----------------------------------------|:-----------|:---------|:---------|
+| groupId   | `id` of a group                          | URL        | String   | TRUE     |
+| roleId    | `id` of a role                           | URL        | String   | TRUE     |
+| appName   | `name` of app target for role assignment | URL        | String   | TRUE     |
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X DELETE \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/IFIFAX2BIRGUSTQ/targets/catalog/apps/facebook"
+~~~
+
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
@@ -636,15 +1181,17 @@ HTTP/1.1 204 No Content
 ~~~
 
 #### Remove App Instance Target from App Administrator Role
+
+##### Remove App Instance Target from App Administrator Role given to a User
 {:.api .api-operation}
 
 {% api_operation delete /api/v1/users/${userId}/roles/${roleId}/targets/catalog/apps/${appName}/${appInstanceId} %}
 
-Removes an app instance target from an `APP_ADMIN` role assignment.
+Removes an app instance target from an `APP_ADMIN` role assigned to a user.
 
 > Note: Don't remove the last app target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all apps, the API consumer should delete the `APP_ADMIN` role assignment and recreate it.
 
-##### Request Parameters
+###### Request Parameters
 {:.api .api-request .api-request-params}
 
 | Parameter | Description                              | Param Type | DataType | Required |
@@ -654,14 +1201,14 @@ Removes an app instance target from an `APP_ADMIN` role assignment.
 | appName   | `name` of app target for role assignment | URL        | String   | TRUE     |
 | appInstanceId   | `id` of the app instance target for role assignment | URL        | String   | TRUE     |
 
-##### Response Parameters
+###### Response Parameters
 {:.api .api-response .api-response-params}
 
 ~~~ http
 HTTP/1.1 204 No Content
 ~~~
 
-##### Request Example
+###### Request Example
 {:.api .api-request .api-request-example}
 
 ~~~sh
@@ -672,7 +1219,51 @@ curl -v -X DELETE \
 "https://{yourOktaDomain}/api/v1/users/00u6fud33CXDPBXULRNG/roles/KVJUKUS7IFCE2SKO/targets/catalog/apps/amazon_aws"
 ~~~
 
-##### Response Example
+###### Response Example
+{:.api .api-response .api-response-example}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+##### Remove App Instance Target from App Administrator Role given to a Group
+{:.api .api-operation}
+
+{% api_operation delete /api/v1/groups/${groupId}/roles/${roleId}/targets/catalog/apps/${appName}/${appInstanceId} %}
+
+Removes an app instance target from an `APP_ADMIN` role assigned to a group.
+
+> Note: Don't remove the last app target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all apps, the API consumer should delete the `APP_ADMIN` role assignment and recreate it.
+
+###### Request Parameters
+{:.api .api-request .api-request-params}
+
+| Parameter       | Description                                         | Param Type | DataType | Required |
+|:----------------|:----------------------------------------------------|:-----------|:---------|:---------|
+| groupId         | `id` of a group                                     | URL        | String   | TRUE     |
+| roleId          | `id` of a role                                      | URL        | String   | TRUE     |
+| appName         | `name` of app target for role assignment            | URL        | String   | TRUE     |
+| appInstanceId   | `id` of the app instance target for role assignment | URL        | String   | TRUE     |
+
+###### Response Parameters
+{:.api .api-response .api-response-params}
+
+~~~ http
+HTTP/1.1 204 No Content
+~~~
+
+###### Request Example
+{:.api .api-request .api-request-example}
+
+~~~sh
+curl -v -X DELETE \
+-H "Accept: application/json" \
+-H "Content-Type: application/json" \
+-H "Authorization: SSWS ${api_token}" \
+"https://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3/roles/IFIFAX2BIRGUSTQ/targets/catalog/apps/facebook/0oassqD8YkfwsJeV60g3"
+~~~
+
+###### Response Example
 {:.api .api-response .api-response-example}
 
 ~~~ http
