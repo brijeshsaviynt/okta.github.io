@@ -258,7 +258,7 @@ curl -v -X POST \
     "assignmentType": "GROUP",
     "_links": {
         "assignee": {
-            "href": "http://rain.okta1.com:1802/api/v1/groups/00gsr2IepS8YhHRFf0g3"
+            "href": "http://{yourOktaDomain}/api/v1/groups/00gsr2IepS8YhHRFf0g3"
         }
     }
 }
@@ -603,7 +603,7 @@ HTTP/1.1 204 No Content
 
 Removes a group target from a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a user.
 
-Don't remove the last group target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all groups, the API consumer should delete the `USER_ADMIN` role assignment and recreate it.
+> Note: Don't remove the last group target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all groups, the API consumer should delete the `USER_ADMIN` role assignment and recreate it.
 
 ###### Request Parameters
 {:.api .api-request .api-request-params}
@@ -646,7 +646,7 @@ HTTP/1.1 204 No Content
 
 Removes a group target from a `USER_ADMIN` or `HELP_DESK_ADMIN` role assigned to a group.
 
-Don't remove the last group target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all groups, the API consumer should delete the `USER_ADMIN` role assignment and recreate it.
+> Note: Don't remove the last group target from a role assignment, as this causes an exception.  If you need a role assignment that applies to all groups, the API consumer should delete the `USER_ADMIN` role assignment and recreate it.
 
 ###### Request Parameters
 {:.api .api-request .api-request-params}
@@ -1009,7 +1009,7 @@ Adds an app instance target for an `APP_ADMIN` role assigned to a user
 
 Adding the first app or (app instance) target changes the scope of the role assignment from applying to all app targets to applying to the specified target.
 
-App Targets and App Instance Targets cannot be mixed for the same app name. For example, you cannot specify that an administrator has access to mange Salesforce (the entire app type) and specific instances of the Salesforce app; it must be one or the other.
+App Targets and App Instance Targets cannot be mixed for the same app name. For example, you cannot specify that an administrator has access to manage Salesforce (the entire app type) and specific instances of the Salesforce app; it must be one or the other.
 
 ###### Request Parameters
 {:.api .api-request .api-request-params}
@@ -1055,7 +1055,7 @@ Adds an app instance target for an `APP_ADMIN` role assigned to a group
 
 Adding the first app or (app instance) target changes the scope of the role assignment from applying to all app targets to applying to the specified target.
 
-App Targets and App Instance Targets cannot be mixed for the same app name. For example, you cannot specify that an administrator has access to mange Salesforce (the entire app type) and specific instances of the Salesforce app; it must be one or the other.
+App Targets and App Instance Targets cannot be mixed for the same app name. For example, you cannot specify that an administrator has access to manage Salesforce (the entire app type) and specific instances of the Salesforce app; it must be one or the other.
 
 ###### Request Parameters
 {:.api .api-request .api-request-params}
